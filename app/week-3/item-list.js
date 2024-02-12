@@ -73,7 +73,6 @@ const item1 = {
 
 
 export default function ItemList(){
-    
     return(
         <ul>
             <Item name={item1.name} quantity={item1.quantity} category={item1.category}></Item>
