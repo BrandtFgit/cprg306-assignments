@@ -1,10 +1,13 @@
+import NewItem from "./new-item";
 
 
 
 export default function Page() {
     return(
-        <main class>
-            
+        <main className="flex justify-center w-full">
+            <NewItem>
+
+            </NewItem>
         </main>
     );
 }
