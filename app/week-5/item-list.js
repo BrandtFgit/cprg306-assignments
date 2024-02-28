@@ -1,92 +1,57 @@
+"use client";
+
+import { useState } from "react";
+
 import Item from "./item";
-const item1 = {
-    name: "milk, 4 L 🥛",
-    quantity: 1,
-    category: "dairy",
-    };
-
-    const item2 = {
-    name: "bread 🍞",
-    quantity: 2,
-    category: "bakery",
-    };
-
-    const item3 = {
-    name: "eggs, dozen 🥚",
-    quantity: 2,
-    category: "dairy",
-    };
-
-    const item4 = {
-    name: "bananas 🍌",
-    quantity: 6,
-    category: "produce",
-    };
-
-    const item5 = {
-    name: "broccoli 🥦",
-    quantity: 3,
-    category: "produce",
-    };
-
-    const item6 = {
-    name: "chicken breasts, 1 kg 🍗",
-    quantity: 1,
-    category: "meat",
-    };
-
-    const item7 = {
-    name: "pasta sauce 🍝",
-    quantity: 3,
-    category: "canned goods",
-    };
-
-    const item8 = {
-    name: "spaghetti, 454 g 🍝",
-    quantity: 2,
-    category: "dry goods",
-    };
-
-    const item9 = {
-    name: "toilet paper, 12 pack 🧻",
-    quantity: 1,
-    category: "household",
-    };
-
-    const item10 = {
-    name: "paper towels, 6 pack",
-    quantity: 1,
-    category: "household",
-    };
-
-    const item11 = {
-    name: "dish soap 🍽️",
-    quantity: 1,
-    category: "household",
-    };
-
-    const item12 = {
-    name: "hand soap 🧼",
-    quantity: 4,
-    category: "household",
-    };
+import items_json from './items.json';
 
 
 export default function ItemList(){
+    const [sortBy, setSortBy] = useState("name");
+
+    const sortedItems = [...items_json].sort((a, b) => {
+        switch(sortBy){
+            case "name":
+                return a.name.localeCompare(b.name);
+            break;
+
+            case "category":
+                return a.category.localeCompare(b.category);
+            break;
+
+            default:
+                return 0;
+            break;
+        }
+    });
+
+    const changeSorting = (newSort) => {
+        setSortBy(newSort);
+    };
+
+    const handleNameButtonClick = () => {
+        changeSorting("name");
+    };
+
+    const handleCategoryButtonClick = () => {
+        changeSorting("category");
+    };
+
+    const handleGroupedCategoryButtonClick = () => {
+        changeSorting("category");
+    }
+
     return(
-        <ul>
-            <Item name={item1.name} quantity={item1.quantity} category={item1.category}></Item>
-            <Item name={item2.name} quantity={item2.quantity} category={item2.category}></Item>
-            <Item name={item3.name} quantity={item3.quantity} category={item3.category}></Item>
-            <Item name={item4.name} quantity={item4.quantity} category={item4.category}></Item>
-            <Item name={item5.name} quantity={item5.quantity} category={item5.category}></Item>
-            <Item name={item6.name} quantity={item6.quantity} category={item6.category}></Item>
-            <Item name={item7.name} quantity={item7.quantity} category={item7.category}></Item>
-            <Item name={item8.name} quantity={item8.quantity} category={item8.category}></Item>
-            <Item name={item9.name} quantity={item9.quantity} category={item9.category}></Item>
-            <Item name={item10.name} quantity={item10.quantity} category={item10.category}></Item>
-            <Item name={item11.name} quantity={item11.quantity} category={item11.category}></Item>
-            <Item name={item12.name} quantity={item12.quantity} category={item12.category}></Item>
-        </ul>
+        <div>
+            <ul>
+                <label for="sort">Sort by:</label>
+                <button className="bg-orange-700 focus:bg-orange-500 p-1 m-2 w-28" onClick={() => handleNameButtonClick()}>Name</button>
+                <button className="bg-orange-700 focus:bg-orange-500 p-1 m-2 w-28" onClick={() => handleCategoryButtonClick()}>Category</button>
+                <button className="bg-orange-700 focus:bg-orange-500 p-1 m-2 w-28" onClick={() => handleGroupedCategoryButtonClick()}>Grouped Category</button>
+                {sortedItems.map(item => (
+                    <Item key={item.id} name={item.name} quantity={item.quantity} category={item.category}/>
+                ))}
+            </ul>
+        </div>
     );
 }
