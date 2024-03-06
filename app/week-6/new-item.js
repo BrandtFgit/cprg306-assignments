@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function NewItem(){
+export default function NewItem({ onAddItem }){
 
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState(1);
@@ -22,7 +22,14 @@ export default function NewItem(){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert("Added item: " + name + ", quantity: "+ quantity + ", category: " + category);
+        const newItem = {
+            id: generateID(16),
+            name: name,
+            quantity: quantity,
+            category: category
+        };
+        onAddItem(newItem);
+        // Clear input fields after adding item
         setName("");
         setQuantity(1);
         setCategory("produce");
@@ -64,4 +71,14 @@ export default function NewItem(){
         </button>
       </form>
     )
+}
+
+function generateID(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
