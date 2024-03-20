@@ -6,6 +6,7 @@ import ItemList from "./item-list";
 import NewItem from "./new-item";
 import itemsData from './items.json';
 import MealIdeas from "./meal-ideas"; 
+import { useUserAuth } from "../_utils/auth-context.js";
 
 function clean(text) {
   // Remove emojis
@@ -18,13 +19,23 @@ function clean(text) {
 }
 
 function removeEmojis(text) {
-  return text.replace(/\p{🥦}/gu, '');
+  return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{1F966}]/gu, '');
 }
-
 
 export default function Page() {
     const [items, setItems] = useState(itemsData);
     const [selectedItemName, setSelectedItemName] = useState("");
+    const {user} = useUserAuth();
+    console.log(user);
+    // Check if the user is not logged in (user object is null)
+    if (!user) {
+      // Redirect the user to the landing page if desired
+      // You can use React Router or any other routing mechanism
+      // Example using React Router: 
+      // return <Redirect to="/" />;
+      return <p>You need to log in to access the shopping list.</p>;
+    }
+
 
     const handleAddItem = (newItem) => {
         setItems(prevItems => [...prevItems, newItem]);
