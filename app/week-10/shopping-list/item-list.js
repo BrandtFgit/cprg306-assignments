@@ -6,11 +6,12 @@ export default function ItemList({ items, onItemSelect }) {
     const [sortBy, setSortBy] = useState("name");
 
     const sortedItems = [...items].sort((a, b) => {
+        console.log(a,b);
         switch (sortBy) {
             case "name":
-                return a.name.localeCompare(b.name);
+                return a.data.name.localeCompare(b.data.name);
             case "category":
-                return a.category.localeCompare(b.category);
+                return a.data.category.localeCompare(b.data.category);
             default:
                 return 0;
         }
@@ -37,10 +38,10 @@ export default function ItemList({ items, onItemSelect }) {
                 
                 {sortedItems.map(item => (
                     <Item
-                        key={item.id}
-                        name={item.name}
-                        quantity={item.quantity}
-                        category={item.category}
+                        key={item.data.id}
+                        name={item.data.name}
+                        quantity={item.data.quantity}
+                        category={item.data.category}
                         onSelect={() => onItemSelect(item)}
                     />
                 ))}

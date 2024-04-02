@@ -34,7 +34,7 @@ export default function Page() {
           <p>
             <button className="text-lg hover:underline" onClick={handleSignOut}>Sign Out</button>
           </p>
-          <a className="text-lg hover:underline" href="/week-8/shopping-list" user={user}>Continue to your Shopping List</a>
+          <a className="text-lg hover:underline" href="/week-10/shopping-list" user={user}>Continue to your Shopping List</a>
         </div>
       ) : (
       <div className="text-lg">

@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Item from "./item";
 import ItemList from "./item-list";
 import NewItem from "./new-item";
-import itemsData from './items.json';
 import MealIdeas from "./meal-ideas"; 
 import { useUserAuth } from "../_utils/auth-context.js";
+import { getItems, addItem } from '../_services/shopping-list-service.js';
 
 function clean(text) {
   // Remove emojis
@@ -23,32 +23,49 @@ function removeEmojis(text) {
 }
 
 export default function Page() {
-    const [items, setItems] = useState(itemsData);
+    const [items, setItems] = useState([]);
     const [selectedItemName, setSelectedItemName] = useState("");
     const {user} = useUserAuth();
     console.log(user);
-    // Check if the user is not logged in (user object is null)
-    if (!user) {
-      // Redirect the user to the landing page if desired
-      // You can use React Router or any other routing mechanism
-      // Example using React Router: 
-      // return <Redirect to="/" />;
-      return <p>You need to log in to access the shopping list.</p>;
+
+    // Function to load items
+    async function loadItems() {
+      try {
+          if (user) {
+              const items = await getItems(user.uid);
+              setItems(items);
+              console.log("Items:", items);
+          }
+      } catch (error) {
+          console.error('Error loading items:', error);
+      }
     }
 
+    useEffect(() => {
+      loadItems();
+    }, [user]);
 
-    const handleAddItem = (newItem) => {
-        setItems(prevItems => [...prevItems, newItem]);
+    // Function to handle adding an item
+    const handleAddItem = async (newItem) => {
+      console.log("Attempting to add Item");
+      try {
+          console.log("Adding Item")
+          const itemId = await addItem(user.uid, newItem);
+          newItem.id = itemId;
+          setItems(prevItems => [...prevItems, newItem]);
+          console.log("Added Item")
+      } catch (error) {
+          console.error('Error adding item:', error);
+      }
     };
 
-
+    // Function to handle item selection
     const handleItemSelect = (item) => {
-
-      const cleanedName = clean(item.name.trim());
-      console.log(cleanedName);
+      const cleanedName = clean(item.data.name.trim());
       setSelectedItemName(cleanedName);
     };
 
+    
     return (
         <main className="bg-slate-950 p-2 m-1 flex">
             <div>
